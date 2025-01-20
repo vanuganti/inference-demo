@@ -61,11 +61,8 @@ The application will start on http://localhost:5000.
 - ** Update models_config.json with correct models for text/vision/audio types for different inference solutions**
 
 ### Usage
-
-. **Select Inference Services**: Choose the services you'd like to compare (e.g., OpenAI, GroQ, SambaNova, etc.).
-. **Enter a Prompt**: Provide a text prompt for inference.
-. **Upload Image or Audio (optional)**: Upload an image or audio file for inference.
-. **Submit**: Click the submit button to send the request and receive results.
-. **Results**: As each service finishes processing, the results will be displayed dynamically.
-
-
+1. **Select Inference Services**: Choose the services you'd like to compare (e.g., OpenAI, GroQ, SambaNova, etc.).
+2. **Enter a Prompt**: Provide a text prompt for inference.
+3. **Upload Image or Audio (optional)**: Upload an image or audio file for inference.
+4. **Submit**: Click the submit button to send the request and receive results.
+5. **Results**: As each service finishes processing, the results will be displayed dynamically along with tokens usage along with time each service took. 
