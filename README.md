@@ -62,7 +62,7 @@ python3 app.py
 The application will start on http://localhost:5000.
 
 ### Model Changes
-- ** Update models_config.json with correct models for text/vision/audio types for different inference solutions**
+- **Update models_config.json with correct models for text/vision/audio types for different inference solutions**
 
 ### Usage
 1. **Select Inference Services**: Choose the services you'd like to compare (e.g., OpenAI, GroQ, SambaNova, etc.).
