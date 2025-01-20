@@ -2,6 +2,10 @@
 
 This repository contains a cloud-based inference service demo, where multiple AI inference services can be compared. The service allows users to upload an image or audio file, provide a text prompt, and get inference results from various AI providers. The results are displayed in a clean, interactive interface.
 
+### Screenshot of the Application
+![Cloud Inference App Screenshot](images/app-screenshot.png)
+This is the screenshot of the app interface. It demonstrates how to select services, upload files, and view results in real time.
+
 ### Features:
 - **Multiple AI Services**: Supports multiple AI providers such as **OpenAI**, **GroQ**, **SambaNova**, **Together**, and **Cerebras**.
 - **Image and Audio Input**: Users can upload image or audio files for inference.
