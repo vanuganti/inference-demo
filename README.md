@@ -15,7 +15,7 @@ This is the screenshot of the app interface. It demonstrates how to select servi
 ### Table of Contents:
 - [Technologies Used](#technologies-used)
 - [Installation](#installation)
-- [Models Configuration](#models-configuration)
+- [Model Configuration](#model-configuration)
 - [Usage](#usage)
 
 ## Technologies Used
