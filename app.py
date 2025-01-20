@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify, Response
+from flask import Flask, render_template, request, jsonify
 import os
 import aiohttp
 import asyncio
@@ -152,27 +152,8 @@ class BaseInfer():
 
         except Exception as e:
             logger.error(f"[{self.service}] Error: {str(e)}")
-            return f"data: {json.dumps({'error': f'[Error from {self.service}] {str(e)}', 'service': self.service})}\n\n"
+            return {'error': f'[Error from {self.service}] {str(e)}', 'service': self.service}
 
-async def process_request(service, prompt, file_data=None):
-    return await BaseInfer(service).send_request(prompt, file_data)
-
-# Function to run all inference services in parallel
-async def infer_in_parallel(inference_services, prompt, file_data=None):
-    tasks = []
-
-    for service in inference_services:
-        tasks.append(process_request(service, prompt, file_data))
-
-    # Gather all responses in parallel
-    results = await asyncio.gather(*tasks)
-
-    response_data = {}
-    for index, service in enumerate(inference_services):
-        response_data[service] = results[index]
-        print(response_data)
-
-    return response_data
 
 @app.route('/')
 def home():
@@ -183,36 +164,34 @@ async def services():
     services = list(models_config.keys())
     return jsonify({"services": services})
 
+async def process_request(service, prompt, file_data=None):
+    return await BaseInfer(service).send_request(prompt, file_data)
+
+# POST handler for a single service
 @app.route('/infer', methods=['POST'])
 async def infer():
-    inference_services = request.form.getlist('services')
-    inference_services = list(set(inference_services))
+    service = request.form.get('service')  
     prompt = request.form.get('prompt')
     
-    # Get the Base64 data from the form
     base64_file = request.form.get('fileBase64')
-    file_ext    = request.form.get('fileExtension')
-    file_type   = request.form.get('fileType')
+    file_ext = request.form.get('fileExtension')
+    file_type = request.form.get('fileType')
 
     if base64_file:
-        logger.info(f"FILE {file_type} -> {file_ext} with valid base64")
         file_data = {
-            'file_type'   : file_type,
-            'file_ext'    : file_ext,
-            'file_base64' : base64_file,
+            'file_type': file_type,
+            'file_ext': file_ext,
+            'file_base64': base64_file,
         }
     else:
-        file_data=None
+        file_data = None
 
-    # Ensure that a prompt is provided
     if not prompt:
         return jsonify({"error": "Prompt is required."}), 400
-
-    # Collect results in parallel and return them all at once
-    response_data = await infer_in_parallel(inference_services, prompt, file_data)
-
-    # Return the aggregated response data as a JSON response
-    return jsonify(response_data)
+    
+    output_data={}
+    output_data[service]= await process_request(service, prompt, file_data)
+    return jsonify(output_data)
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
