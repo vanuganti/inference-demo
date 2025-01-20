@@ -43,6 +43,29 @@ git clone https://github.com/yourusername/cloud-inference-demo.git
 cd cloud-inference-demo
 ```
 
-### Key Changes:
-- **Models Configuration Section**: Added a detailed explanation of the `models_config.json` file, which is critical for defining and updating the supported inference models.
-- **Instructions for Updating `models_config`**: Provides a clear guide on how to add or update models for different services, making it easy to extend the platform with new models or services.
+### Install dependencies:
+- **Create a virtual environment and install the required packages**
+```
+python3 -m venv venv
+source venv/bin/activate  # On Windows, use 'venv\Scripts\activate'
+pip install -r requirements.txt
+```
+
+### Run the application:
+```
+python3 app.py
+```
+The application will start on http://localhost:5000.
+
+### Model Changes
+- ** Update models_config.json with correct models for text/vision/audio types for different inference solutions**
+
+### Usage
+
+. **Select Inference Services**: Choose the services you'd like to compare (e.g., OpenAI, GroQ, SambaNova, etc.).
+. **Enter a Prompt**: Provide a text prompt for inference.
+. **Upload Image or Audio (optional)**: Upload an image or audio file for inference.
+. **Submit**: Click the submit button to send the request and receive results.
+. **Results**: As each service finishes processing, the results will be displayed dynamically.
+
+

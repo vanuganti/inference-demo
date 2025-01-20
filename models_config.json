@@ -1,27 +1,42 @@
 {
     "openai": {
+        "displayName": "OpenAI",
         "textModel": "gpt-4o-mini",
         "visionModel": "gpt-4o",
-        "audioModel": "whisper"
+        "audioModel": "whisper",
+        "apiBase": "https://api.openai.com/v1/chat/completions",
+        "logo": "https://www.openai.com/favicon.ico"
     },
     "groq": {
+        "displayName": "GroQ",
         "textModel": "llama-3.1-8b-instant",
         "visionModel": "llama-3.2-11b-vision-preview",
-        "audioModel": "whisper-large-v3"
+        "audioModel": "whisper-large-v3",
+        "apiBase": "https://api.groq.com/openai/v1/chat/completions",
+        "logo": "https://groq.com/wp-content/uploads/2024/02/android-icon-192x192-1.png"
     },
     "sambanova": {
+        "displayName": "SambaNova",
         "textModel": "Meta-Llama-3.1-8B-Instruct",
         "visionModel": "Llama-3.2-11B-Vision-Instruct",
-        "audioModel": "Qwen2-Audio-7B-Instruct"
+        "audioModel": "Qwen2-Audio-7B-Instruct",
+        "apiBase": "https://api.sambanova.ai/v1/chat/completions",
+        "logo": "https://www.sambanova.ai/favicon.ico"
     },
     "together": {
+        "displayName": "Together",
         "textModel": "meta-llama/Meta-Llama-3-8B-Instruct-Lite",
         "visionModel": "meta-llama/Llama-Vision-Free",
-        "audioModel": ""
+        "audioModel": "",
+        "apiBase": "https://api.together.ai/v1/chat/completions",
+        "logo": "https://cdn.prod.website-files.com/64f6f2c0e3f4c5a91c1e823a/654693d90fe837461728588f_webclip.png"
     },
     "cerebras": {
+        "displayName": "Cerebras",
         "textModel": "llama3.1-8b",
         "visionModel": "",
-        "audioModel": ""
+        "audioModel": "",
+        "apiBase": "https://api.cerebras.ai/v1/chat/completions",
+        "logo": "https://cerebras.ai/wp-content/uploads/2022/05/cropped-cerebras-logo-fav-32x32.png"
     }
 }

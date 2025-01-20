@@ -36,16 +36,9 @@ class BaseInfer():
         return apikey
 
     def apibase(self, service):
-        if service == 'sambanova':
-            return 'https://api.sambanova.ai/v1/chat/completions'
-        elif service == 'together':
-            return 'https://api.together.ai/v1/chat/completions'
-        elif service == 'cerebras':
-            return 'https://api.cerebras.ai/v1/chat/completions'
-        elif service == 'groq':
-            return 'https://api.groq.com/openai/v1/chat/completions'
-        else:
-            return 'https://api.openai.com/v1/chat/completions'
+        if service in models_config and 'apiBase' in models_config[service]:
+            return models_config[service]['apiBase']
+        return 'https://api.openai.com/v1/chat/completions'
 
     async def send_request(self, prompt_message, file_data=None):
         try:
@@ -135,7 +128,9 @@ class BaseInfer():
                             'outputTokens': 0,
                             'model': self.modelname,
                             'timeTaken': time_taken,
-                            'service': self.service
+                            'service': self.service,
+                            'displayName': models_config[self.service]['displayName'],
+                            'logo': models_config[self.service]['logo']
                         }
                     else:
                         output_data = {
@@ -145,7 +140,9 @@ class BaseInfer():
                             'outputTokens': response_data['usage']['completion_tokens'],
                             'model': self.modelname,
                             'timeTaken': time_taken,
-                            'service': self.service
+                            'service': self.service,
+                            'displayName': models_config[self.service]['displayName'],
+                            'logo': models_config[self.service]['logo']
                         }
 
                     return output_data
