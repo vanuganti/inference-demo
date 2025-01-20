@@ -15,11 +15,8 @@ This is the screenshot of the app interface. It demonstrates how to select servi
 ### Table of Contents:
 - [Technologies Used](#technologies-used)
 - [Installation](#installation)
-- [Usage](#usage)
-- [API Documentation](#api-documentation)
 - [Models Configuration](#models-configuration)
-- [Contributing](#contributing)
-- [License](#license)
+- [Usage](#usage)
 
 ## Technologies Used
 
@@ -61,10 +58,10 @@ python3 app.py
 ```
 The application will start on http://localhost:5000.
 
-### Model Changes
-- **Update models_config.json with correct models for text/vision/audio types for different inference solutions**
+## Model Configuration
+Update `models_config.json` with correct models for text/vision/audio types for different inference solutions
 
-### Usage
+## Usage
 1. **Select Inference Services**: Choose the services you'd like to compare (e.g., OpenAI, GroQ, SambaNova, etc.).
 2. **Enter a Prompt**: Provide a text prompt for inference.
 3. **Upload Image or Audio (optional)**: Upload an image or audio file for inference.
