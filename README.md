@@ -39,8 +39,8 @@ This repository contains a cloud-based inference service demo, where multiple AI
 
 ### Clone the repository:
 ```bash
-git clone https://github.com/yourusername/cloud-inference-demo.git
-cd cloud-inference-demo
+git clone git@github.com:vanuganti/inference-demo.git
+cd inference-demo
 ```
 
 ### Install dependencies:
