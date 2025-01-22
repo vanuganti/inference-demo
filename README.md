@@ -71,5 +71,5 @@ Update `models_config.json` with correct models for text/vision/audio types for 
 5. **Streaming**: When streaming is enabled, token consumption data is skipped as most APIs dont return the usage data. 
 
 ## TODO
-1. **Model Selection**: Make model selection by fetching currently available models from the selected vendors as dropdown option.
-2. **API Keys**: Make API keys as input option so that it can updated at runtime.
+1. **Model Selection**: Make model selection from a dropdown by fetching currently available models from the selected vendors directly.
+2. **API Keys**: Make API keys as input option so that it can be updated at runtime without .env dependancy.
