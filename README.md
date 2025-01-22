@@ -62,6 +62,9 @@ The application will start on http://localhost:5000.
 ## Model Configuration
 Update `models_config.json` with correct models for text/vision/audio types for different inference solutions
 
+## API Keys
+You need to add all API`models_config.json` with correct models for text/vision/audio types for different inference solutions
+
 ## Usage
 1. **Select Inference Services**: Choose the services you'd like to compare (e.g., OpenAI, GroQ, SambaNova, etc.).
 2. **Enter a Prompt**: Provide a text prompt for inference.
