@@ -10,6 +10,7 @@ This is the screenshot of the app interface. It demonstrates how to select servi
 - **Multiple AI Services**: Supports multiple AI providers such as **OpenAI**, **GroQ**, **SambaNova**, **Together**, and **Cerebras**.
 - **Image and Audio Input**: Users can upload image or audio files for inference.
 - **Real-time Results**: Displays inference results dynamically as each service completes processing.
+- **Streaming**: Results can be streaming as needed.
 - **Result Visualization**: Results are displayed with tokens used, time taken, and the underlying model used.
 
 ### Table of Contents:
@@ -30,7 +31,7 @@ This is the screenshot of the app interface. It demonstrates how to select servi
 - **Backend**:
   - Flask (Python web framework)
   - aiohttp for asynchronous HTTP requests
-  - APIs from various inference providers like OpenAI, GroQ, and SambaNova
+  - APIs from various inference providers like OpenAI, GroQ, Together, Cerebras and SambaNova
 
 ## Installation
 
@@ -67,3 +68,8 @@ Update `models_config.json` with correct models for text/vision/audio types for 
 3. **Upload Image or Audio (optional)**: Upload an image or audio file for inference.
 4. **Submit**: Click the submit button to send the request and receive results.
 5. **Results**: As each service finishes processing, the results will be displayed dynamically along with tokens usage along with time each service took. 
+5. **Streaming**: When streaming is enabled, token consumption data is skipped as most APIs dont return the usage data. 
+
+## TODO
+1. **Model Selection**: Make model selection by fetching currently available models from the selected vendors as dropdown option.
+2. **API Keys**: Make API keys as input option so that it can updated at runtime.

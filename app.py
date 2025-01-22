@@ -106,7 +106,7 @@ class BaseInfer():
 
     async def send_request(self):
         try:
-            logger.info(f"Sending request {self.prompt}")
+            logger.info(f"[{self.service}]Sending request {self.prompt}")
             if self.service not in models_config:
                 return {'error': f"ERROR: Service {self.service} missing from models_config", 'service': self.service}
             
@@ -120,6 +120,7 @@ class BaseInfer():
                 async with session.post(self.base_url, json=self.payload, headers=self.headers) as response:
                         response_data = await response.json()
                         time_taken = time.time() - start_time
+                        logger.info(f"[{self.service}]Total time {time_taken:,.2}s")
                         
                         # Prepare output data
                         if 'error' in response_data:
@@ -153,6 +154,7 @@ class BaseInfer():
             return {'error': f'[Error from {self.service}] {str(e)}', 'service': self.service}
         
     def send_stream_request(self):    
+        logger.info(f"[{self.service}]Sending stream request {self.prompt}")
         start_time = time.time()
 
         async def stream():    
@@ -179,6 +181,7 @@ class BaseInfer():
                 final_chunk['model']=self.modelname
                 time_taken = time.time() - start_time
                 final_chunk['timeTaken'] = time_taken
+                logger.info(f"[{self.service}]Total time {time_taken:,.2}s")
                 yield f"data: {json.dumps(final_chunk)}\n\n"
                 pass
         return sync_gen()
