@@ -120,8 +120,6 @@ class BaseInfer():
                 async with session.post(self.base_url, json=self.payload, headers=self.headers) as response:
                         response_data = await response.json()
                         time_taken = time.time() - start_time
-                        logger.info(f"[{self.service}] Response time: {time_taken:.2f}s")
-                        logger.debug(f"[{self.service}]{response_data}")
                         
                         # Prepare output data
                         if 'error' in response_data:
@@ -217,7 +215,6 @@ async def infer():
         file_type = request.form.get('fileType')
 
         streaming = request.form.get('streaming') == 'true'
-        logger.info(streaming)
 
         if base64_file is not None and base64_file != '':
             file_data = {
