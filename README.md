@@ -63,7 +63,15 @@ The application will start on http://localhost:5000.
 Update `models_config.json` with correct models for text/vision/audio types for different inference solutions
 
 ## API Keys
-You need to add all API`models_config.json` with correct models for text/vision/audio types for different inference solutions
+You need to add all API keys in `.env` file
+```
+.env
+OPENAI_API_KEY="add-openai-key-here"
+GROQ_API_KEY="paste-groq-api-key-here"
+SAMBANOVA_API_KEY="paste-sambanova-api-key-here"
+TOGETHER_API_KEY="paste-together-api-key-here"
+CEREBRAS_API_KEY="paste-cerebras-api-key-here"
+```
 
 ## Usage
 1. **Select Inference Services**: Choose the services you'd like to compare (e.g., OpenAI, GroQ, SambaNova, etc.).
