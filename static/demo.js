@@ -54,18 +54,11 @@ document.addEventListener("DOMContentLoaded", function () {
         newUrl.searchParams.set('streaming', isStreaming);
         history.pushState({}, '', newUrl);
 
-        // Show loading indicator
-        document.getElementById('loading-indicator').style.display = 'block';
-
-        const formData = new FormData(this);
+        const formData = new FormData();
 
         // Add streaming option if checked
-        formData.append('streaming', isStreaming);
-
-        // Append selected services to form data
-        uniqueServices.forEach(service => {
-            formData.append('services', service);
-        });
+        formData.set('streaming', isStreaming);
+		formData.set('prompt', prompt);
 
         // Handle file upload and convert to Base64
         const fileInput = document.getElementById('fileInput');
@@ -77,51 +70,144 @@ document.addEventListener("DOMContentLoaded", function () {
                 const fileExtension = file.name.split('.').pop().toLowerCase(); // Extract file extension
                 const fileType = file.type.startsWith('image/') ? 'image' : file.type.startsWith('audio/') ? 'audio' : 'unknown';
 
-                formData.append('fileBase64', base64File);
-                formData.append('fileType', fileType);
-                formData.append('fileExtension', fileExtension);
-                formData.append('fileName', file.name);
+                formData.set('fileBase64', base64File);
+                formData.set('fileType', fileType);
+                formData.set('fileExtension', fileExtension);
+                formData.set('fileName', file.name);
                 submitFormData(formData);
             };
             reader.readAsDataURL(fileInput.files[0]);
         } else {
             submitFormData(formData);
         }
-
-		function escapeHtml(str) {
-			return str.replace(/&/g, "&amp;")
-					.replace(/</g, "&lt;")
-					.replace(/>/g, "&gt;")
-					.replace(/"/g, "&quot;")
-					.replace(/'/g, "&#039;");
-		}
-
+        
         async function submitFormData(formData) {
             document.getElementById('results').innerHTML = "";
             document.getElementById('loading-indicator').style.display = 'block';
+            serviceCode = {}
+            let completedRequests = 0;
+
             const serviceRequests = uniqueServices.map(service => {
                 formData.set('service', service);
-                return fetch('/infer', {
-                    method: 'POST',
-                    body: formData
-                }).then(response => response.json())
-                    .then(result => {
-                        showServiceResults(result);
-                    }).catch(error => {
-                        console.error("Error with the service:", service, error);
-                    });
+                serviceCode[service]= undefined;
+    
+                $.ajax({
+                    url: '/infer',
+                    type: 'POST',
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function(data) {
+                        if (data && data[service] && data[service].result) {
+                            showServiceResults(data);
+                            completedRequests++;
+                            checkAndHideLoadingIndicator();
+                        } else if (data && data.startsWith("data: ")) {
+                            processChunk(data, serviceCode, service);
+                            completedRequests++;
+                            checkAndHideLoadingIndicator();
+                        }
+                    },
+                    xhr: function() {
+                        var xhr = new window.XMLHttpRequest();
+                        xhr.onreadystatechange = function () {
+                            if (xhr.readyState === 3 && xhr.status === 200) {
+                                processChunk(xhr.responseText, serviceCode, service);
+                            }
+                        };
+                        return xhr;
+                    }
+                });
             });
             await Promise.all(serviceRequests);
-            document.getElementById('loading-indicator').style.display = 'none';
+
+            function checkAndHideLoadingIndicator() {
+                if (completedRequests === uniqueServices.length) {
+                    console.log('hiding');
+                    $('#loading-indicator').hide();
+                    document.getElementById('loading-indicator').style.display = 'none';
+                }
+            }
         }
 
-        function showServiceResults(result) {
-            // Hide loading indicator once results start coming in
-            document.getElementById('loading-indicator').style.display = 'none';
+        function processChunk(chunkText, serviceCode, service) {
+            if (chunkText == "data: [DONE]") {
+                return;
+            }
+            if (!chunkText.startsWith("data: ")) {
+                return;
+            }
+            const chunkDataArray = chunkText.split('data: ').filter(function (chunkData) {
+                return chunkData.trim() !== '';
+            });
+            if (!serviceCode[service]) {
+                var output_data = {};
+                output_data[service] = {
+                    'result': '',
+                    'totalTokens': 0,
+                    'inputTokens': 0,
+                    'outputTokens': 0,
+                    'model': '',
+                    'timeTaken': 0,
+                    'service': service
+                };
+                showServiceResults(output_data, service);
+                serviceCode[service] = {}
+                serviceCode[service]['code'] = $(`#result-${service}-text`).get(0);
+                serviceCode[service]['code'].innerHTML = "";
+                serviceCode[service]['processedLength'] = 0;
+            }
 
+            // Process each chunk of data
+            let currentLength = 0;
+            let previousLength = serviceCode[service]['processedLength'];
+            chunkDataArray.forEach(function (chunkData) {
+                try {
+                    chunkData=chunkData.trim()
+                    currentLength+=1;
+
+                    if (currentLength <= previousLength) {
+                        return;
+                    }
+                    if (chunkData == "[DONE]") {
+                    } else {
+                        try {
+                            var data = JSON.parse(chunkData);
+                            var content = undefined;                                                
+                            if (data.choices && data.choices[0] && data.choices[0].delta && data.choices[0].delta.content) {
+                                content = data.choices[0].delta.content;
+                            } else if (data.status && data.status == "STREAM_ENDED") {
+                                $(`#tokens-${service}-text`).get(0).innerHTML = "0";
+                                if (data.model) {
+                                    $(`#model-${service}-text`).get(0).innerHTML = `${data.model}`
+                                }
+                                if (data.timeTaken) {
+                                    $(`#time-${service}-text`).get(0).innerHTML = `${data.timeTaken.toFixed(2)}s`
+                                }
+                            }
+                            if (content != undefined) {
+                                serviceCode[service]['code'].innerHTML += content;
+                                serviceCode[service]['code'].scrollTop = serviceCode.scrollHeight;
+                            }
+                        } catch(error) {
+                            console.error('Error parsing chunk:', error, 'chunk:', chunkData);
+                        }
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                }
+            });
+            serviceCode[service]['processedLength']=chunkDataArray.length;;
+        }
+    
+
+        function showServiceResults(result, service_name) {
             // Get the service name from the result
-            const service = Object.keys(result)[0];
+            const service = service_name ? service_name : Object.keys(result)[0];
             const serviceResult = result[service];
+
+			const logoUrl = serviceResult.logo || servicesList.find(s => s.name === service)?.logo;;
+			const displayName = serviceResult.displayName || servicesList.find(s => s.name === service)?.displayName;
 
             // Calculate column size based on the number of services selected
             const totalServices = uniqueServices.length;
@@ -137,14 +223,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
             // Create the logo element
             const logo = document.createElement('img');
-            logo.src = servicesList.find(s => s.name === service).logo;
+            logo.src = logoUrl;
             logo.classList.add('inference-logo');
             logo.alt = `${service} Logo`;
 
             // Create the title (h4)
             const title = document.createElement('h4');
             title.classList.add('text-center');
-            title.textContent = servicesList.find(s => s.name === service).displayName;
+            title.textContent = displayName;
 
             // Pre and code elements for result (normal or error)
             const pre = document.createElement('pre');
@@ -166,18 +252,21 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 // Time and tokens sections
                 const timeTokens = document.createElement('div');
+                const timeTokensId = `time-${service}-text`;
+                const totalTokensId = `tokens-${service}-text`;
                 timeTokens.classList.add('time-tokens');
                 timeTokens.innerHTML = `
-                    <div><span class="label">Time</span> <span class="value">${(serviceResult.timeTaken).toFixed(2)}s</span></div>
-                    <div><span class="label">Tokens</span> <span class="value">${serviceResult.totalTokens} (input: ${serviceResult.inputTokens}, output: ${serviceResult.outputTokens})</span></div>
+                    <div><span class="label">Time</span> <span id="${timeTokensId}" class="value">${(serviceResult.timeTaken).toFixed(2)}s</span></div>
+                    <div><span class="label">Tokens</span> <span id="${totalTokensId}" class="value">${serviceResult.totalTokens} (input: ${serviceResult.inputTokens}, output: ${serviceResult.outputTokens})</span></div>
                 `;
                 tokensInfo.appendChild(timeTokens);
 
                 // Model section
                 const modelSection = document.createElement('div');
+                const modelId = `model-${service}-text`;
                 modelSection.classList.add('model');
                 modelSection.innerHTML = `
-                    <span class="label">Model</span> <span class="value">${serviceResult.model}</span>
+                    <span class="label">Model</span> <span id="${modelId}" class="value">${serviceResult.model}</span>
                 `;
                 tokensInfo.appendChild(modelSection);
             }
