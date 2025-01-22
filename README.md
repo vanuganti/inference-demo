@@ -17,6 +17,7 @@ This is the screenshot of the app interface. It demonstrates how to select servi
 - [Technologies Used](#technologies-used)
 - [Installation](#installation)
 - [Model Configuration](#model-configuration)
+- [API Keys](#api-keys)
 - [Usage](#usage)
 
 ## Technologies Used
@@ -31,7 +32,7 @@ This is the screenshot of the app interface. It demonstrates how to select servi
 - **Backend**:
   - Flask (Python web framework)
   - aiohttp for asynchronous HTTP requests
-  - APIs from various inference providers like OpenAI, GroQ, Together, Cerebras and SambaNova
+  - APIs from various inference providers like OpenAI, SambaNova, GroQ, Together and Cerebras
 
 ## Installation
 
@@ -79,7 +80,6 @@ CEREBRAS_API_KEY="paste-cerebras-api-key-here"
 3. **Upload Image or Audio (optional)**: Upload an image or audio file for inference.
 4. **Submit**: Click the submit button to send the request and receive results.
 5. **Results**: As each service finishes processing, the results will be displayed dynamically along with tokens usage along with time each service took. 
-5. **Streaming**: When streaming is enabled, token consumption data is skipped as most APIs dont return the usage data. 
 
 ## TODO
 1. **Model Selection**: Make model selection from a dropdown by fetching currently available models from the selected vendors directly.

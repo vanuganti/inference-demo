@@ -3,6 +3,12 @@ body {
     color: white;
 }
 
+.inference-form {
+    padding: 0px 5px 10px 5px; 
+    border: 1px dotted #323232;
+    border-radius: 10px;
+}
+
 .result-column {
     padding: 5px 5px;
     border: 1px solid #444;
@@ -24,8 +30,12 @@ body {
 }
 
 .btn-submit {
-    margin-top: 10px;
-    width: 100%;
+    display: block;
+    margin: 0 auto;
+    width: auto;  
+    text-align: center;
+    padding: 10px 40px;
+    border-top: 1px dotted #444;
     background-color: #007bff;
     color: white;
 }
@@ -37,6 +47,11 @@ body {
 .form-group {
     margin-top: 10px;
     border-top: 1px dotted #444;
+    padding: 10px 5px;
+}
+
+.form-group:first-child {
+    border-top: none;
 }
 
 .form-group label {
@@ -127,6 +142,7 @@ hr {
     background-color: #2c2c2c;
     color: white;
     border-color: #444;
+    padding: 10px 10px;
 }
 
 .bootstrap-select .dropdown-menu {
@@ -141,41 +157,46 @@ hr {
 .bootstrap-select .dropdown-menu li a {
     color: #ddd;
 }
-.file-selection {
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
+.form-control-file {
+    padding: 10px 10px;
 }
 
-.file-preview {
-    margin: 10px;
-    padding: 10px;
-    text-align: center;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    transition: transform 0.2s ease;
+/* Dark theme for select picker */
+.selectpicker {
+    background-color: #2c2c2c;  /* Dark background */
+    color: #fff;  /* White text */
+    border: 1px solid #444;  /* Dark border */
+    padding: 10px;  /* Space inside */
+    border-radius: 8px;  /* Rounded corners */
+    width: auto;  /* Adjust width to content */
+    display: inline-block;  /* Ensure it stays inline */
 }
 
-.file-preview:hover {
-    transform: scale(1.05);
-    cursor: pointer;
+/* Dark theme dropdown menu */
+.selectpicker .dropdown-menu {
+    background-color: #121212;  /* Dark background for dropdown */
+    border: 1px solid #444;  /* Dark border for dropdown */
+    color: #fff;  /* White text */
 }
 
-.image {
-    background-color: #f1f1f1;
+/* Dark theme options */
+.selectpicker .dropdown-menu li a {
+    color: #ddd;  /* Light grey text */
 }
 
-.audio {
-    background-color: #e0e0e0;
+/* Highlight selected item in dropdown */
+.selectpicker .dropdown-menu li.selected a {
+    background-color: #007bff;  /* Highlight background for selected option */
+    color: white;  /* Ensure text is visible */
 }
 
-.file-preview img {
-    max-width: 100%;
-    height: auto;
+/* Focus effect for selectpicker */
+.selectpicker:focus {
+    border-color: #007bff;  /* Light border color on focus */
 }
 
-.file-preview p {
-    font-size: 12px;
-    margin-top: 8px;
-    color: #333;
+/* Adjusting the select element width based on content */
+.selectpicker {
+    width: auto;
+    min-width: 200px;  /* Ensures it doesn't collapse too much */
 }

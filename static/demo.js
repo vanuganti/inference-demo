@@ -58,7 +58,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // Add streaming option if checked
         formData.set('streaming', isStreaming);
-		formData.set('prompt', prompt);
+        formData.set('prompt', prompt);
 
         // Handle file upload and convert to Base64
         const fileInput = document.getElementById('fileInput');
@@ -123,7 +123,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
             function checkAndHideLoadingIndicator() {
                 if (completedRequests === uniqueServices.length) {
-                    console.log('hiding');
                     $('#loading-indicator').hide();
                     document.getElementById('loading-indicator').style.display = 'none';
                 }
@@ -170,24 +169,36 @@ document.addEventListener("DOMContentLoaded", function () {
                         return;
                     }
                     if (chunkData == "[DONE]") {
+                        serviceCode[service]['code'].scrollTop = 0;
                     } else {
                         try {
                             var data = JSON.parse(chunkData);
+
+                            if (!data) {
+                                return;
+                            }
                             var content = undefined;                                                
-                            if (data.choices && data.choices[0] && data.choices[0].delta && data.choices[0].delta.content) {
+                            if (data.choices && data.choices[0] && 
+                                data.choices[0].delta && data.choices[0].delta.content) {
                                 content = data.choices[0].delta.content;
-                            } else if (data.status && data.status == "STREAM_ENDED") {
-                                $(`#tokens-${service}-text`).get(0).innerHTML = "0";
+                            } 
+                            if (content != undefined) {
+                                serviceCode[service]['code'].innerHTML += content;
+                                serviceCode[service]['code'].scrollTop = serviceCode[service]['code'].scrollHeight;;
+                            } 
+                            if (data.usage || data.x_groq) {
+                                const usage = data.x_groq && data.x_groq.usage ? data.x_groq.usage : data.usage; 
+                                if (usage && usage.total_tokens > 0) {
+                                    $(`#tokens-${service}-text`).get(0).innerHTML = `${usage.total_tokens} (input: ${usage.prompt_tokens}, output: ${usage.completion_tokens})`;
+                                }
                                 if (data.model) {
                                     $(`#model-${service}-text`).get(0).innerHTML = `${data.model}`
                                 }
+                            }
+                            if (data.status && data.status == "STREAM_ENDED") {
                                 if (data.timeTaken) {
                                     $(`#time-${service}-text`).get(0).innerHTML = `${data.timeTaken.toFixed(2)}s`
                                 }
-                            }
-                            if (content != undefined) {
-                                serviceCode[service]['code'].innerHTML += content;
-                                serviceCode[service]['code'].scrollTop = serviceCode.scrollHeight;
                             }
                         } catch(error) {
                             console.error('Error parsing chunk:', error, 'chunk:', chunkData);

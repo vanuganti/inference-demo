@@ -16,10 +16,12 @@
     <h1 class="text-center">Cloud Inference Demo</h1>
 
     <!-- Service Selection Dropdown -->
-    <form id="inference-form" method="POST" enctype="multipart/form-data">
+    <form id="inference-form" class="inference-form" method="POST" enctype="multipart/form-data">
+
         <div class="form-group">
             <label for="services">Select Inference Services to Compare:</label>
-            <select class="form-control selectpicker" id="services" name="services" multiple="multiple" required></select>
+            <select class="form-control selectpicker" id="services" name="services" multiple="multiple" required>
+            </select>
         </div>
 
         <div class="form-group">
@@ -39,7 +41,7 @@
             </div>
         </div>
 
-        <button type="submit" class="btn btn-submit">Submit</button>
+        <button type="submit" class="btn btn-submit ">Submit</button>
     </form>
 
     <!-- Loading Indicator -->

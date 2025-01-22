@@ -94,7 +94,6 @@ class BaseInfer():
             'Authorization': f'Bearer {self.apikey}',
             'Content-Type': 'application/json'
         }
-
         self.payload = {
             "model": self.modelname,
             "stream" : streaming,
@@ -103,6 +102,10 @@ class BaseInfer():
                 "content" : payload_message
             }]
         }
+        if streaming:
+            self.payload['stream_options'] = {
+                "include_usage": True
+            }
 
     async def send_request(self):
         try:
@@ -159,9 +162,12 @@ class BaseInfer():
 
         async def stream():    
             async with aiohttp.ClientSession() as session:
+                chunks_index=0
                 async with session.post(self.base_url, json=self.payload, headers=self.headers) as response:
                     async for chunk in response.content.iter_any():
                         chunk_str=chunk.decode('utf-8')
+                        chunks_index+=1
+                        logger.debug(f"[{self.service}]RETURN CHUNK {chunks_index}=>{chunk_str}")
                         yield chunk_str
 
 
