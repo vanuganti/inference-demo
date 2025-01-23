@@ -245,9 +245,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
             // Pre and code elements for result (normal or error)
             const pre = document.createElement('pre');
+            pre.classList.add('result-box');
             const code = document.createElement('code');
             code.id = `result-${service}-text`;
-            code.classList.add('result-box');
+            code.classList.add('result-code');
 
             let tokensInfo = undefined;
             if (serviceResult.error !== undefined) {
